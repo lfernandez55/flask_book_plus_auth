@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{{ url_for('categories') }}">Categories</a></li>
+  <li class="breadcrumb-item active">Books in Category</li>
+{% endblock %}
+
+
+
+{% block page_content %}
+
+  <h2>{{categoryDescription}}</h2>
+
+  {% for book in books %}
+    <div>
+    {{ book['title']}} -- {{ book['author']}}
+    </div>
+
+  {% endfor%}
+
+{% endblock %}

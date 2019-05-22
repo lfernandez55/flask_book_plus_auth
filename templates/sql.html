@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+  <li class="breadcrumb-item active">Custom SQL</li>
+{% endblock %}
+
+
+{% block page_content %}
+
+  <h1>Run SQL Select Statements (other SQL will fail)</h1>
+  {#TODO:  to run other sql you have to put a commit=True in the
+    sql statement.  But that should only be run  when its not a SELECt#}
+  <form method="post">
+    <div>
+      <label >SQL:</label>
+      <textarea  name="sqlField" required>SELECT * FROM Book</textarea>
+    </div>
+    <div>
+      <input type="submit">
+    </div>
+  </form>
+
+  <pre>
+  {{data}}
+  </pre>
+
+{% endblock %}

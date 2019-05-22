@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+  <li class="breadcrumb-item active">New Book</li>
+{% endblock %}
+
+
+{% block page_content %}
+
+
+
+<form method="post">
+  <div>
+    <label >Author</label>
+    <input type="text" name="author" required value="aaa">
+  </div>
+  <div>
+    <label >Title</label>
+    <input type="text" name="title" required value="ttt">
+  </div>
+  <div>
+    <label >isbn</label>
+    <input type="text" name="isbn" required value="iii">
+  </div>
+  <div>
+    <label >Description</label>
+    <textarea  name="description" required>dddd</textarea>
+  </div>
+  <div>
+    <label >Category</label>
+    <input list="categories" name="category">
+    <datalist id="categories">
+        {% for category in categories %}
+          <option value="{{category['description']}}">
+        {% endfor%}
+    </datalist>
+  </div>
+  <div>
+    <input type="submit">
+  </div>
+</form>
+
+{% endblock %}

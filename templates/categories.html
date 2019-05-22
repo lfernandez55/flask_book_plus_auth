@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+  <li class="breadcrumb-item active">Categories</li>
+{% endblock %}
+
+
+{% block page_content %}
+
+
+
+{% for category in categories %}
+  <div><a href="{{ url_for('books_in_cat', categoryID=category['rowid']) }}">{{category['description']}}</a></div>
+{% endfor%}
+
+{% endblock %}
