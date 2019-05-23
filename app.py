@@ -8,6 +8,7 @@ import sqlite3
 from flask_bootstrap import Bootstrap
 
 
+
 # Class-based application configuration
 class ConfigClass(object):
     """ Flask application config """
@@ -68,6 +69,7 @@ def create_app():
 
         # Define the relationship to Role via UserRoles
         roles = db.relationship('Role', secondary='user_roles')
+
 
     # Define the Role data-model
     class Role(db.Model):
@@ -151,13 +153,8 @@ def create_app():
         return render_template('all_books.html', books=books)
 
     @app.route('/seedDB')
+    @roles_required('Admin')
     def seedDB():
-        # sqlQ = execute_sql('DROP TABLE IF EXISTS Book',commit=True)
-        # sqlQ = execute_sql('DROP TABLE IF EXISTS Category',commit=True)
-        #
-        # sqlQuery = execute_sql('CREATE TABLE Book (author TEXT,title TEXT, isbn INTEGER, description TEXT, category_id INTEGER)',commit=True)
-        # sqlQuery = execute_sql('CREATE TABLE Category (description TEXT)',commit=True)
-
         sqlQuery2 = execute_sql('INSERT INTO Book (author,title,isbn, description, category_id) VALUES ("Mary Shelly","Frankenstein","1", "A horror story written by a romantic.","1")',commit=True)
         sqlQuery2 = execute_sql('INSERT INTO Book (author,title,isbn, description, category_id) VALUES ("Henry James","The Turn of the Screw","2", "Another British horror story.","1")',commit=True)
         sqlQuery2 = execute_sql('INSERT INTO Book (author,title,isbn, description, category_id) VALUES ("Max Weber","The Protestant Work Ethic and The Spirit of Capitalism","3", "A classic early 20th C. sociology text","2")',commit=True)
@@ -180,6 +177,7 @@ def create_app():
         return '<h1>DB Seeded!</h1>'
 
     @app.route('/erase_DB')
+    @roles_required('Admin')
     def eraseDB():
             # sqlQ = execute_sql('DROP TABLE IF EXISTS Book',commit=True)
             # sqlQ = execute_sql('DROP TABLE IF EXISTS Category',commit=True)
@@ -193,6 +191,7 @@ def create_app():
 
 
     @app.route('/addbook', methods={'GET','POST'})
+    @login_required
     def addbook():
         if request.method == 'POST':
             author = request.form['author']
@@ -223,9 +222,12 @@ def create_app():
     @login_required
     def categories():
         categories = execute_sql('SELECT rowid, * FROM Category ORDER BY description ASC')
+        for cat in categories:
+            print(cat['rowid'])
         return render_template('categories.html', categories=categories)
 
     @app.route('/books_in_category/<categoryID>')
+    @login_required
     def books_in_cat(categoryID):
         categories = execute_sql('SELECT * FROM Category WHERE rowid = ? ',[categoryID])
         categoryDescription= categories[0]['description']
@@ -267,56 +269,21 @@ def create_app():
     def tinker():
         return '<h1>Tinker function executed, check console</h1>'
 
+    @app.route('/tink')
+    def tink():
+         return render_template('tink.html')
+
     # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
-        return render_template_string("""
-                {% extends "flask_user_layout.html" %}
-                {% block content %}
-                    <h2>{%trans%}Home page{%endtrans%}</h2>
-                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
-                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
-                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
-                    <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
-                    <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
-                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
-                {% endblock %}
-                """)
         return render_template('index.html')
 
-    # The Members page is only accessible to authenticated users
-    @app.route('/members')
-    @login_required    # Use of @login_required decorator
-    def member_page():
-        return render_template_string("""
-                {% extends "flask_user_layout.html" %}
-                {% block content %}
-                    <h2>{%trans%}Members page{%endtrans%}</h2>
-                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
-                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
-                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
-                    <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
-                    <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
-                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
-                {% endblock %}
-                """)
 
     # The Admin page requires an 'Admin' role.
     @app.route('/admin')
     @roles_required('Admin')    # Use of @roles_required decorator
     def admin_page():
-        return render_template_string("""
-                {% extends "flask_user_layout.html" %}
-                {% block content %}
-                    <h2>{%trans%}Admin Page{%endtrans%}</h2>
-                    <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
-                    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
-                    <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
-                    <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
-                    <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
-                    <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
-                {% endblock %}
-                """)
+        return render_template('admin.html')
 
 
 

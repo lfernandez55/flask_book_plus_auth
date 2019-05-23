@@ -1,0 +1,26 @@
+{% extends "tink_extend1.html" %}
+
+<h1>In tink</h1>
+
+{% block head %}
+In tink head (displaces text of inherited head)
+{% endblock %}
+
+{% block content %}
+In tink content (displaces content tag but not parent main it's nested in)
+{% endblock %}
+
+
+{% block container %}
+<p>in tink block container (also displaces child nested blocks)</p>
+
+
+
+{% endblock %}
+
+{% block child2 %}
+<p>this block only in child</p>
+
+
+
+{% endblock %}

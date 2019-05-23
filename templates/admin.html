@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+  <li class="breadcrumb-item active">All Books</li>
+{% endblock %}
+
+
+{% block page_content %}
+
+<ul class="nav navbar-nav">
+    <li><a href="{{ url_for('seedDB') }}" >Seed Database</a></li>
+    <li><a href="{{ url_for('eraseDB') }}" >Erase Database</a></li>
+    <li><a href="{{ url_for('tinker') }}" >Tinker</a></li>
+    <li><a href="{{ url_for('sql') }}" >SQL</a></li>
+</ul
+{% endblock %}
