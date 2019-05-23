@@ -286,9 +286,15 @@ def create_app():
         return render_template('admin.html')
 
 
+    @app.context_processor
+    def example():
+        return dict(myexample='This is an example')
 
-
-
+    @app.context_processor
+    def utility_processor():
+        def format_price(amount, currency=u'€'):
+            return u'{0:.2f}{1}'.format(amount, currency)
+        return dict(format_price=format_price)
 
     return app
 
