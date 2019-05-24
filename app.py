@@ -18,6 +18,7 @@ class ConfigClass(object):
 
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = 'sqlite:///basic_app3.sqlite'    # File-based SQL database
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///books.sqlite'    # File-based SQL database
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
 
     # Flask-Mail SMTP server settings
@@ -113,8 +114,8 @@ def create_app():
         db.session.commit()
 
     ##############  Books Stuff Below  ####################
-    PATH = 'books.sqlite'
-
+    # PATH = 'books.sqlite'
+    PATH = 'basic_app3.sqlite'
     def open_connection():
         connection = getattr(g, '_connection', None)
         if connection == None:
@@ -276,6 +277,7 @@ def create_app():
     # The Home page is accessible to anyone
     @app.route('/')
     def home_page():
+        db_admin()
         return render_template('index.html')
 
 
@@ -290,11 +292,26 @@ def create_app():
     def example():
         return dict(myexample='This is an example')
 
+    # @app.context_processor
+    # def utility_processor():
+    #     def format_price(amount, currency=u'€'):
+    #         return u'{0:.2f}{1}'.format(amount, currency)
+    #     return dict(format_price=format_price)
+
     @app.context_processor
     def utility_processor():
-        def format_price(amount, currency=u'€'):
-            return u'{0:.2f}{1}'.format(amount, currency)
-        return dict(format_price=format_price)
+        def isAdmin(user):
+            print(user)
+            roleName = execute_sql('SELECT roles.name FROM roles JOIN user_roles ON roles.id=user_roles.role_id JOIN users ON users.id=user_roles.user_id WHERE users.email="luke.fernandez@gmail.com" AND roles.name="Admin" ' )
+            if roleName[0]['name'] == 'Admin':
+                returnValue = 1
+            else:
+                returnValue = 0
+            print (roleName[0]['name'])
+            return returnValue
+        return dict(isAdmin=isAdmin)
+
+
 
     return app
 

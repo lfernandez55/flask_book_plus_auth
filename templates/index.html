@@ -14,5 +14,7 @@
 
   {{myexample}}
 
-  {{ format_price(0.33) }}
+  {#{{ format_price(0.33) }}#}
+
+  {{ isAdmin(current_user.email) }}
 {% endblock %}
