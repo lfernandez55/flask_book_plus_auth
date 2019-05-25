@@ -7,22 +7,30 @@
 
 
 {% block page_content %}
-
+<div class="row">
+  <div class="col-sm-7 col-md-6 col-lg-5 col-centered">
   <h1>Run SQL Select Statements (other SQL will fail)</h1>
   {#TODO:  to run other sql you have to put a commit=True in the
     sql statement.  But that should only be run  when its not a SELECt#}
-  <form method="post">
-    <div>
-      <label >SQL:</label>
-      <textarea  name="sqlField" required>SELECT * FROM Book</textarea>
+  <form method="post" class="form">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-xs-6">
+          <label>SQL:</label>
+        </div>
+      </div>
+      <textarea rows="4" cols="60" name="sqlField" required placeholder="SELECT * FROM Book"></textarea>
     </div>
-    <div>
+    <div >
       <input type="submit">
     </div>
   </form>
 
-  <pre>
-  {{data}}
-  </pre>
+  <div style="margin-top:20px">
+    <pre>
+    {{data}}
+    </pre>
+  </div>
+
 
 {% endblock %}

@@ -31,7 +31,7 @@ class ConfigClass(object):
     MAIL_DEFAULT_SENDER = '"MyApp" <noreply@example.com>'
 
     # Flask-User settings
-    USER_APP_NAME = "Flask-User Basic App"      # Shown in and email templates and page footers
+    USER_APP_NAME = "Fine Books"      # Shown in and email templates and page footers
     USER_ENABLE_EMAIL = True        # Enable email authentication
     USER_ENABLE_USERNAME = False    # Disable username authentication
     USER_EMAIL_SENDER_NAME = USER_APP_NAME
@@ -142,12 +142,8 @@ def create_app():
 
     bootstrap = Bootstrap( app)
 
-    @app.route('/xx')
-    def home():
-        db_admin()
-        return render_template('index.html')
-
     @app.route('/all_books')
+    @login_required
     def books():
         books = execute_sql('SELECT Category.description AS c_description, Book.description AS b_description, * FROM Category INNER JOIN Book ON Category.rowID=Book.category_id  ORDER BY c_description ASC')
         print(len(books))
@@ -214,7 +210,7 @@ def create_app():
             returnStatus = execute_sql('INSERT INTO Book (author, title, isbn, description, category_id) VALUES (?, ?, ?, ?, ?)',
             (author, title, isbn, description, categoryID),commit=True)
 
-            return redirect(url_for('home'))
+            return redirect(url_for('home_page'))
 
         categories = execute_sql('SELECT * FROM Category ORDER BY description ASC')
         return render_template('addbook.html', categories=categories)
@@ -270,6 +266,7 @@ def create_app():
     def tinker():
         return '<h1>Tinker function executed, check console</h1>'
 
+    #Demos Jinja2 extends
     @app.route('/tink')
     def tink():
          return render_template('tink.html')
@@ -292,27 +289,18 @@ def create_app():
     def example():
         return dict(myexample='This is an example')
 
-    # @app.context_processor
-    # def utility_processor():
-    #     def format_price(amount, currency=u'€'):
-    #         return u'{0:.2f}{1}'.format(amount, currency)
-    #     return dict(format_price=format_price)
 
     @app.context_processor
     def utility_processor():
         def isAdmin(user):
-            print(user)
-            roleName = execute_sql('SELECT roles.name FROM roles JOIN user_roles ON roles.id=user_roles.role_id JOIN users ON users.id=user_roles.user_id WHERE users.email="luke.fernandez@gmail.com" AND roles.name="Admin" ' )
-            if roleName[0]['name'] == 'Admin':
+            sqlStatement = "SELECT roles.name FROM roles JOIN user_roles ON roles.id=user_roles.role_id JOIN users ON users.id=user_roles.user_id WHERE users.email='" + user + "' AND roles.name='Admin'"
+            roleName = execute_sql(sqlStatement)
+            if len(roleName) > 0 and roleName[0]['name'] == 'Admin':
                 returnValue = 1
             else:
                 returnValue = 0
-            print (roleName[0]['name'])
             return returnValue
         return dict(isAdmin=isAdmin)
-
-
-
     return app
 
 
