@@ -5,9 +5,12 @@ python app.py (it can also be started with flask run)
 -----------
 Transferred templates folder over
 
-modified
+Early commits of this repo modified
 C:\Users\lfernandez\Documents\GitHub\flask_book_plus_auth\venv\Lib\site-packages\flask_user\templates\flask_user_layout.html
 (e.g. added nav to it)
+but per flask-user customization instructions these should really be accomplished by moving the venv...flask_user\templates folder into root\templates which is
+what latter commits have done 
+
 
 modified
 base.html
