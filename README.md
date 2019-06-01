@@ -1,7 +1,7 @@
 # flask_book_plus_auth
 ------------
 This app is started from the command line but with:
-python app.py
+python app.py (it can also be started with flask run)
 -----------
 Transferred templates folder over
 
@@ -19,10 +19,3 @@ creating callable functions from jinja2 temmplates:
 https://stackoverflow.com/questions/6036082/call-a-python-function-from-jinja2
 
 -----------
-TODO: get role and hide admin function when appropriate (can probably do with sql)
-consolidate databases
-add form to add other admins
-consolidate flask_user_layout and base.html  (can probably just have base extend flask_user_layout)
-format forms better
-move signup stuff to right
-separate stuff out into db file, app file and route file
